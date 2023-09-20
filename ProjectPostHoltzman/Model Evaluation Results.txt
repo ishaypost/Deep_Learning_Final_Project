@@ -1,0 +1,726 @@
+Parameters to change:
+lr, batch size, activation function, nodes in layer, iterations on the dialate and erode (normalzation), amounts of layers, use dropouts, use batch normalization, 
+
+
+###############################		test 1:		####################################
+PICTURE_SIZE = 20
+EPOCHS = 3
+'batch_size': 32
+optimizer='adam',
+model - 
+model = tf.keras.models.Sequential([
+    # Note: the input shape is the size of your patches
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(PATCH_SIZE, PATCH_SIZE, 1)),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.Conv2D(128, (3, 3), activation='relu'),  # Additional Conv layer
+    layers.MaxPooling2D((2, 2)),
+    layers.Flatten(),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(PICTURE_SIZE)  # The output layer has 20 units, one for each handwriter
+])
+
+RESULTS:
+Test accuracy: 0.07468774169683456
+accuracy_score: 0.1
+
+
+
+Conclusion: we need to check for less PICTURE_SIZE and more epochs
+
+
+###############################		test 2:		####################################
+PICTURE_SIZE = 5
+EPOCHS = 5
+rest of stuff - same
+
+RESULTS:
+loss: nan
+Test accuracy: 0.04426884278655052
+accuracy_score: 0.05
+
+Conclusion: there's a problem with the picture size being low so i changed back to 20 for next test
+
+
+###############################		test 3:		####################################
+PICTURE_SIZE = 20
+EPOCHS = 5
+'batch_size': 32
+rest of stuff - same
+
+RESULTS:
+loss: 2.3977
+Test accuracy: 0.2059648185968399
+accuracy_score: 0.4
+
+test 3.5: same parameters - 
+RESULTS:
+loss: 2.4897
+Test accuracy:0.17180728912353516
+accuracy_score:0.3
+
+
+###############################		test 4:		####################################
+PICTURE_SIZE = 20
+EPOCHS = 5
+'batch_size': 16
+
+RESULTS:
+loss: 2.9213
+Test accuracy:0.08165519684553146
+accuracy_score: 0.15
+
+###############################		test 5:		####################################
+PICTURE_SIZE = 20
+EPOCHS = 5
+'batch_size': 64
+
+RESULTS:
+loss: 2.3942
+Test accuracy: 0.19882743060588837
+accuracy_score: 0.4
+
+test 5.5: same parameters - 
+RESULTS:
+loss: 2.4998
+Test accuracy: 0.1762 
+accuracy_score: 0.3
+
+###############################		test 6:		####################################
+PICTURE_SIZE = 5
+EPOCHS = 10
+'batch_size': 32
+
+RESULTS:
+loss: 1.2070 
+Test: 0.43706536293029785
+accuracy_score: 0.4
+
+###############################		test 7:		####################################
+PICTURE_SIZE = 5
+EPOCHS = 20
+'batch_size': 32
+
+RESULTS:
+loss: 0.9576 
+Test: 0.5452 
+accuracy_score: 1.0
+
+
+###############################		test 8:		####################################
+changed the model to have 4 layers.BatchNormalization()
+
+Picture Size:  5
+Epochs:  20
+Batch Size:  32 
+
+Results: 
+Loss:  1.259
+Test:   0.346
+Accuracy Score 0.4
+
+
+###############################		test 9:		####################################
+changed the model to have 4 layers.Dropout(0.25)
+
+Picture Size:  5
+Epochs:  20
+Batch Size:  32 
+
+Results: 
+Loss:  1.003
+Test:   0.5
+Accuracy Score 0.6
+
+###############################		test 10:	####################################
+changed the model to optimizer=tf.keras.optimizers.Adam(learning_rate=0.001)
+
+Picture Size:  5
+Epochs:  20
+Batch Size:  32 
+
+Results: 
+Loss:  1.036
+Test:   0.502
+Accuracy Score 1.0
+
+###############################		test 11:	####################################
+changed the model to model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
+Picture Size:  5
+Epochs:  20
+Batch Size:  32 
+
+Results: 
+Loss:  1.365
+Test:   0.367
+Accuracy Score 0.6
+
+###############################		test 12:	####################################
+changed the model to model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
+Picture Size:  5
+Epochs:  50
+Batch Size:  32 
+
+Results: 
+Loss:  0.996
+Test:   0.541
+Accuracy Score 0.8
+
+conclusion: we are going back to 0.001 lr
+
+###############################		test 13:	####################################
+changed the model completely:
+model = tf.keras.models.Sequential([
+    # Note: the input shape is the size of your patches
+    layers.Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=(PATCH_SIZE, PATCH_SIZE, 1)),
+    layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+    layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
+    layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Flatten(),
+    layers.Dense(128, activation='relu'),
+
+    layers.Dense(64, activation='relu'),
+    layers.Dense(PICTURE_SIZE)  # The output layer has 20 units, one for each handwriter
+])
+
+not good
+
+conclusion: go back to original model
+
+
+###############################		test 14:	####################################
+changed model to:
+model = tf.keras.models.Sequential([
+    # Note: the input shape is the size of your patches
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(PATCH_SIZE, PATCH_SIZE, 1)),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(128, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(256, (3, 3), activation='relu'),  # Additional Conv layer
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Flatten(),
+    layers.Dense(128, activation='relu'),  # Increased size
+    layers.Dense(64, activation='relu'),
+    layers.Dense(PICTURE_SIZE)
+])
+
+Picture Size:  5
+Epochs:  25
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  0.88
+Test:   0.611
+Accuracy Score 1.0
+
+conclusion: this model is better than our original model.
+
+###############################		test 15:	####################################
+same model as test 14 but increased epochs  to 50 instead of 25
+
+Picture Size:  5
+Epochs:  50
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  0.863
+Test:   0.636
+Accuracy Score 1.0
+
+###############################		test 16:	####################################
+changed model to add another layer: layers.Dense(256, activation='relu'),
+and changed epochs to 25 so we can evaluate the previous model with 25 epochs
+
+Picture Size:  5
+Epochs:  25
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  0.977
+Test:   0.543
+Accuracy Score 1.0
+------------------------------------
+test 16.5 - same as test 16 but we want to check if results are the same:
+
+Picture Size:  5
+Epochs:  25
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  0.955
+Test:   0.548
+Accuracy Score 1.0 
+
+
+conclusion: results of 16 and 16.5 are very similar so we can determine that test 14 & 15 are the best
+
+###############################		test 17:	####################################
+I want to now get data for 20 classes and check on the new model from test 14 & 15:
+Picture Size:  20
+Epochs:  25
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  2.144
+Test:   0.305
+Accuracy Score 0.8
+
+
+
+###############################		test 18:	####################################
+Picture Size:  20
+Epochs:  100
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  2.083
+Test:   0.353
+Accuracy Score 0.85
+
+###############################		test 19:	####################################
+i tried increasing the learning rate to 0.005 and the batch size to 64 but didnt work
+i also tried keeping the batch size at 32 but still at 0.005 was not good so went back to 0.001.
+i think a good idea would be to make data for 7 or 10 images to be abler to get something different than 1.0 accuracy like with 5 images.
+###############################		test 20:	####################################
+Picture Size:  20
+Epochs:  30
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  2.165
+Test:   0.306
+Accuracy Score 0.6
+
+###############################		test 21:	####################################
+Picture Size:  20
+Epochs:  30
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  2.298
+Test:   0.271
+Accuracy Score 0.65
+
+###############################		test 22:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  1.619
+Test:   0.4
+Accuracy Score 0.8
+
+###############################		test 23:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  1.618
+Test:   0.386
+Accuracy Score 0.5
+
+###############################		test 24:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  1.532
+Test:   0.419
+Accuracy Score 0.8
+
+###############################		test 25:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  1.487
+Test:   0.426
+Accuracy Score 0.7
+
+###############################		test 26:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.001
+Batch Size:  32 
+
+Results: 
+Loss:  1.525
+Test:   0.413
+Accuracy Score 0.8
+
+###############################		test 27:	####################################
+Now I changed the lr to be smaller:
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0007
+Batch Size:  32 
+
+Results: 
+Loss:  1.481
+Test:   0.448
+Accuracy Score 1.0
+
+Conclusion:
+MAKE LR SMALLER!!
+
+
+###############################		test 28:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0007
+Batch Size:  32 
+
+Results: 
+Loss:  1.48
+Test:   0.441
+Accuracy Score 0.9
+
+###############################		test 29:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0007
+Batch Size:  32 
+
+Results: 
+Loss:  1.554
+Test:   0.404
+Accuracy Score 0.7
+
+###############################		test 30:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0007
+Batch Size:  32 
+
+Results: 
+Loss:  1.433
+Test:   0.45
+Accuracy Score 0.9
+
+###############################		test 31:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0007
+Batch Size:  32 
+
+Results: 
+Loss:  1.579
+Test:   0.397
+Accuracy Score 0.6
+
+###############################		test 32:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0007
+Batch Size:  32 
+
+Results: 
+Loss:  1.511
+Test:   0.415
+Accuracy Score 0.9
+
+###############################		test 33:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Loss:  1.455
+Test:   0.433
+Accuracy Score 0.8
+
+###############################		test 34:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Loss:  1.467
+Test:   0.439
+Accuracy Score 1.0
+
+###############################		test 35:	
+
+Picture Size:  100
+Epochs:  150
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.321
+Accuracy Score 0.92
+####################################
+
+
+###############################		test 36:	####################################
+Picture Size:  204
+Epochs:  2
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.052
+Accuracy Score 0.118
+Sum Predictions Accuracy Score 0.113
+
+###############################		test 37:	####################################
+Picture Size:  20
+Epochs:  40
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.305
+Accuracy Score 0.75
+Sum Predictions Accuracy Score 0.75
+
+###############################		test 38:	####################################
+Picture Size:  20
+Epochs:  40
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.334
+Accuracy Score 0.8
+Sum Predictions Accuracy Score 0.9
+
+
+###############################		test 39:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.557
+Accuracy Score 0.7
+Sum Predictions Accuracy Score 0.7
+
+###############################		test 40:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.639
+Accuracy Score 1.0
+Sum Predictions Accuracy Score 1.0
+
+###############################		test 41:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.589
+Accuracy Score 1.0
+Sum Predictions Accuracy Score 1.0
+
+###############################		test 42:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.61
+Accuracy Score 1.0
+Sum Predictions Accuracy Score 1.0
+
+###############################		test 43:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.618
+Accuracy Score 0.9
+Sum Predictions Accuracy Score 1.0
+
+###############################		test 44:	####################################
+Picture Size:  10
+Epochs:  20
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.609
+Accuracy Score 1.0
+Sum Predictions Accuracy Score 1.0
+
+
+###############################		test 45:	####################################
+Picture Size:  20
+Epochs:  50
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.505
+Accuracy Score 0.95
+Sum Predictions Accuracy Score 0.9
+
+
+###############################		test 46:	####################################
+Picture Size:  204
+Epochs:  150
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.22
+Accuracy Score 0.735
+Sum Predictions Accuracy Score 0.907
+
+
+###############################		test 47:	####################################
+Picture Size:  204
+Epochs:  100
+Learning Rate:  0.0007
+Batch Size:  32 
+
+Results: 
+Test:   0.221
+Accuracy Score 0.77
+Sum Predictions Accuracy Score 0.892
+
+
+
+###############################		test 48:	####################################
+TEST SET:
+
+Picture Size:  203
+Epochs:  100
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.209
+Accuracy Score 0.695
+Sum Predictions Accuracy Score 0.857
+
+
+###############################		test 49:	####################################
+TEST SET:
+
+Picture Size:  203
+Epochs:  134
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.214
+Accuracy Score 0.704
+Sum Predictions Accuracy Score 0.862
+
+
+###############################		test 50:	####################################
+TEST SET:
+
+Picture Size:  203
+Epochs:  120
+Learning Rate:  0.0005
+Batch Size:  32 
+
+Results: 
+Test:   0.221
+Accuracy Score 0.739
+Sum Predictions Accuracy Score 0.877
+
+
+###############################		test 51:	####################################
+
+
+
+###############################		test 52:	####################################
+
+
+
+###############################		test 53:	####################################
+
+
+
+###############################		test 54:	####################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
